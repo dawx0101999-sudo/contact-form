@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contact Us | ISA3 Assignment</title>
+  <meta name="description" content="Contact form built for TYBCA ISA3 assignment, hosted on Vercel.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="page">
+    <section class="intro">
+      <h1>Let's talk.</h1>
+      <p class="lead">Have a question, idea or feedback? Fill in the form and we'll reply within two working days.</p>
+      <ul class="details">
+        <li><strong>Email</strong><span>hello@example.com</span></li>
+        <li><strong>Phone</strong><span>+91 98765 43210</span></li>
+        <li><strong>Address</strong><span>Pimpri, Pune, Maharashtra</span></li>
+      </ul>
+    </section>
+
+    <section class="card" aria-labelledby="form-title">
+      <form id="contactForm" novalidate>
+        <h2 id="form-title">Send a message</h2>
+
+        <div class="field">
+          <label for="name">Full name</label>
+          <input id="name" name="name" type="text" autocomplete="name" required minlength="2" maxlength="80">
+          <small class="error" aria-live="polite"></small>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" autocomplete="email" required maxlength="120">
+            <small class="error" aria-live="polite"></small>
+          </div>
+          <div class="field">
+            <label for="phone">Phone <span class="opt">(optional)</span></label>
+            <input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="15">
+            <small class="error" aria-live="polite"></small>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="subject">Subject</label>
+          <select id="subject" name="subject" required>
+            <option value="">Choose a topic</option>
+            <option>General enquiry</option>
+            <option>Feedback</option>
+            <option>Support</option>
+            <option>Collaboration</option>
+          </select>
+          <small class="error" aria-live="polite"></small>
+        </div>
+
+        <div class="field">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" rows="5" required minlength="10" maxlength="1000"></textarea>
+          <div class="meta"><small class="error" aria-live="polite"></small><small id="count">0 / 1000</small></div>
+        </div>
+
+        <!-- Honeypot: real users never see this. Bots fill it in. -->
+        <input type="text" name="website" id="website" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true">
+
+        <button type="submit" id="submitBtn"><span class="label">Send message</span><span class="spinner" aria-hidden="true"></span></button>
+        <p id="status" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
