@@ -1,5 +1,5 @@
-// Vercel serverless function: receives the form, validates it, saves it to Supabase (PostgreSQL).
-// Keys come from Vercel Environment Variables, never hard-code them.
+// Vercel serverless function: validates the form and saves it to Neon (PostgreSQL).
+const { neon } = require("@neondatabase/serverless");
 
 module.exports = async (req, res) => {
   if (req.method !== "POST") {
@@ -24,29 +24,19 @@ module.exports = async (req, res) => {
   if (!subject) return res.status(400).json({ error: "Please choose a subject." });
   if (message.length < 10 || message.length > 1000) return res.status(400).json({ error: "Message must be 10 to 1000 characters." });
 
-  const { SUPABASE_URL, SUPABASE_SERVICE_KEY } = process.env;
-  if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
-    return res.status(500).json({ error: "Server is not configured yet." });
+  if (!process.env.DATABASE_URL) {
+    return res.status(500).json({ error: "Database is not configured yet." });
   }
 
   try {
-    const r = await fetch(`${SUPABASE_URL}/rest/v1/contacts`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        apikey: SUPABASE_SERVICE_KEY,
-        Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
-        Prefer: "return=minimal"
-      },
-      body: JSON.stringify({ name, email, phone: phone || null, subject, message })
-    });
-    if (!r.ok) {
-      console.error("Supabase error:", r.status, await r.text());
-      return res.status(502).json({ error: "Could not save your message. Please try again." });
-    }
+    const sql = neon(process.env.DATABASE_URL);
+    await sql`
+      INSERT INTO contacts (name, email, phone, subject, message)
+      VALUES (${name}, ${email}, ${phone || null}, ${subject}, ${message})
+    `;
     return res.status(200).json({ ok: true });
   } catch (e) {
-    console.error(e);
-    return res.status(500).json({ error: "Server error. Please try again." });
+    console.error("Database error:", e);
+    return res.status(500).json({ error: "Could not save your message. Please try again." });
   }
 };
